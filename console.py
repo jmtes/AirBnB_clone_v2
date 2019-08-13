@@ -50,7 +50,10 @@ class HBNBCommand(cmd.Cmd):
                     arg_split = i.split("=")
                     if arg_split[1][0] == "\"":
                         arg_split[1] = arg_split[1][1:-1]
-                        arg_split[1] = arg_split[1].replace('_', ' ')
+                        arg_split[1] = arg_split[1].replace('_',
+                                                            ' ').replace('"',
+                                                                         '\\"')
+                        # arg.split[1] = arg_split[1].replace('"', '\\"')
                     else:
                         arg_split[1] = eval(arg_split[1])
                     setattr(obj, arg_split[0], arg_split[1])
