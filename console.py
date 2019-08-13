@@ -54,8 +54,10 @@ class HBNBCommand(cmd.Cmd):
                                                             ' ').replace('"',
                                                                          '\\"')
                         # arg.split[1] = arg_split[1].replace('"', '\\"')
+                    elif arg_split[1].isdigit():
+                        arg_split[1] = int(arg_split[1])
                     else:
-                        arg_split[1] = eval(arg_split[1])
+                        arg_split[1] = float(arg_split[1])
                     setattr(obj, arg_split[0], arg_split[1])
             print("{}".format(obj.id))
         except SyntaxError:
