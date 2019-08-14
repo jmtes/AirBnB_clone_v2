@@ -14,14 +14,15 @@ class State(BaseModel, Base):
     __tablename__ = 'states'
     name = Column(String(128), nullable=False)
     # cities = relationship("City", cascade="delete")
-    cities = relationship('City', backref='state')
-
-    @property
-    def cities(self):
-        """Returns cities obj
-        """
-        newlist = []
-        for city in self.cities:
-            if city.state_id == self.id:
-                newlist.append(city)
-        return (newlist)
+    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+        citiess = relationship('City', backref='states')
+    else:
+        @property
+        def cities(self):
+            """Returns cities obj
+            """
+            newlist = []
+            for city in models.storage.all(City):
+                if city.state_id == self.id:
+                    newlist.append(city)
+            return (newlist)
