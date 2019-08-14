@@ -1,17 +1,12 @@
 #!/usr/bin/python3
 """This is database storage class for Airbnb
 """
-from models.base_model import BaseModel
-from models.user import User
+from models.base_model import BaseModel, Base
 from models.state import State
 from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
 from sqlalchemy import create_engine
 import os
 from sqlalchemy.orm import sessionmaker
-from models.base_model import Base
 from sqlalchemy.orm import scoped_session
 
 class DBStorage:
@@ -31,7 +26,7 @@ class DBStorage:
         """
         newdict = {}
         if not cls:
-            for i in session.query(User, State, City, Amenity, Place, Review).all():
+            for i in session.query(State, City).all():
                 key = i.__class__.__name__ + "." + i.id
                 newdict[key] = i
                 return (newdict)
@@ -45,13 +40,13 @@ class DBStorage:
         """adds the object to the current database session
         """
         self.__session.add(obj)
-        self.__save(obj)
+        #self.save()
 
     def save(self):
         """
         commits all changes of the current database session
         """
-        self.__session.flush()
+        #self.__session.flush()
         self.__session.commit()
 
     def delete(self, obj=None):
@@ -60,14 +55,15 @@ class DBStorage:
         if obj:
             obj_id = obj.id
             obj_result = session.query(type(obj).filer(type(obj).id==obj_id.delete()))
-            self.__session.commit()
+        #    self.__session.commit()
 
     def reload(self):
         """creates all tables in the database (feature of SQLAlchemy)
         """
         Base.metadata.create_all(self.__engine)
-        Session = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        self.__session = scoped_session(Session)
+        Session_s = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        Session = scoped_session(Session_s)
+        self.__session = Session()
 
 
 
