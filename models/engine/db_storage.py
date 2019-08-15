@@ -73,7 +73,7 @@ class DBStorage:
         if obj:
             obj_id = obj.id
             obj_result = self.__session.query(
-                type(obj).filer(type(obj).id == obj_id.delete()))
+                type(obj).filter(type(obj).id == obj_id.delete()))
         #    self.__session.commit()
 
     def reload(self):
