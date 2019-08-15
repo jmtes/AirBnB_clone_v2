@@ -150,7 +150,7 @@ class HBNBCommand(cmd.Cmd):
                 if name[0] == args[0]:
                     my_list.append(objects[key])
             print(my_list)
-            #return my_list
+            # return my_list
         except NameError:
             print("** class doesn't exist **")
 

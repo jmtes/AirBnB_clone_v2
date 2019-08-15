@@ -8,7 +8,9 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
+
 class BaseModel:
+
     """This class will defines all common attributes/methods
     for other classes
     """
@@ -76,5 +78,3 @@ class BaseModel:
         """Delete the current instance from the storage models.storage
         """
         models.storage.delete(self)
-
-

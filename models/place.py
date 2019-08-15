@@ -10,6 +10,7 @@ import models.amenity
 
 
 class Place(BaseModel, Base):
+
     """This is the class for Place
     Attributes:
         city_id: city id
@@ -38,12 +39,18 @@ class Place(BaseModel, Base):
     amenity_ids = []
 
     place_amenity = Table('place_amenity', Base.metadata,
-            Column('place_id', String(60), ForeignKey('places.id'), primary_key=True, nullable=False),
-            Column('amenity_id', String(60), ForeignKey('amenities.id'), primary_key=True, nullable=False))
+                          Column('place_id', String(60), ForeignKey(
+                                 'places.id'), primary_key=True,
+                                 nullable=False),
+                          Column('amenity_id', String(60),
+                                 ForeignKey('amenities.id'), primary_key=True,
+                                 nullable=False))
 
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
-        reviews = relationship("Review", backref='place', cascade='all, delete-orphan')
-        amenities = relationship("Amenity", secondary=place_amenity, viewonly=False)
+        reviews = relationship(
+            "Review", backref='place', cascade='all, delete-orphan')
+        amenities = relationship(
+            "Amenity", secondary=place_amenity, viewonly=False)
     else:
         @property
         def reviews(self):
@@ -64,13 +71,8 @@ class Place(BaseModel, Base):
                 if amenity.id in amenity_ids:
                     newlist.append(amenity)
             return newlist
+
         @amenities.setter
         def amenities(self, obj):
             if type(obj) == Amenity:
                 amenity_ids.append(obj.id)
-
-
-
-
-
-
