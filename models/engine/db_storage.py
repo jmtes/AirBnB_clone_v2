@@ -18,7 +18,7 @@ class DBStorage:
 
     def __init__(self):
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(os.environ['HBNB_MYSQL_USER'], os.environ['HBNB_MYSQL_PWD'], os.environ['HBNB_MYSQL_HOST'], os.environ['HBNB_MYSQL_DB'], pool_pre_ping=True))
-        if os.environ == 'HBNB_ENV':
+        if os.environ['HBNB_ENV'] == 'test':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
@@ -26,20 +26,23 @@ class DBStorage:
         """
         newdict = {}
         if not cls:
-            for i in session.query(State, City).all():
+            query = self.__session.query(State).all()
+            query += self.__session.query(City).all()
+            for i in query:
                 key = i.__class__.__name__ + "." + i.id
                 newdict[key] = i
-                return (newdict)
+            #print(newdict[key])
         else:
-            for i in session.query(cls).all():
+            for i in self.__session.query(cls).all():
                 key = i.__class__.__name__ + "." + i.id
                 newdict[key] = i
-                return (newdict)
+        return (newdict)
 
     def new(self, obj):
         """adds the object to the current database session
         """
         self.__session.add(obj)
+        self.__session.commit()
         #self.save()
 
     def save(self):
@@ -54,7 +57,7 @@ class DBStorage:
         """
         if obj:
             obj_id = obj.id
-            obj_result = session.query(type(obj).filer(type(obj).id==obj_id.delete()))
+            obj_result = self.__session.query(type(obj).filer(type(obj).id==obj_id.delete()))
         #    self.__session.commit()
 
     def reload(self):
