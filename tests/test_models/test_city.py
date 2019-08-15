@@ -39,6 +39,11 @@ class TestCity(unittest.TestCase):
         """checking for docstrings"""
         self.assertIsNotNone(City.__doc__)
 
+    def test_instance(self):
+        """Testing type of instance"""
+        self.assertTrue(type(self.city), City)
+
+
     def test_attributes_City(self):
         """chekcing if City have attributes"""
         self.assertTrue('id' in self.city.__dict__)
@@ -46,6 +51,7 @@ class TestCity(unittest.TestCase):
         self.assertTrue('updated_at' in self.city.__dict__)
         self.assertTrue('state_id' in self.city.__dict__)
         self.assertTrue('name' in self.city.__dict__)
+
 
     def test_is_subclass_City(self):
         """test if City is subclass of Basemodel"""
@@ -56,6 +62,9 @@ class TestCity(unittest.TestCase):
         self.assertEqual(type(self.city.name), str)
         self.assertEqual(type(self.city.state_id), str)
 
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                     "skipping if database")
+
     def test_save_City(self):
         """test if the save works"""
         self.city.save()
@@ -64,7 +73,8 @@ class TestCity(unittest.TestCase):
     def test_to_dict_City(self):
         """test if dictionary works"""
         self.assertEqual('to_dict' in dir(self.city), True)
-
+        self.assertTrue(self.city.to_dict()["created_at"], str)
+        self.assertTrue(self.city.to_dict()["updated_at"], str)
 
 if __name__ == "__main__":
     unittest.main()
