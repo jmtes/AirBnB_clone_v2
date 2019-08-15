@@ -5,6 +5,7 @@ from unittest.mock import patch
 from io import StringIO
 import pep8
 import os
+import os.path
 import json
 import console
 import tests
@@ -88,6 +89,9 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("all User")
             self.assertEqual(
                 "[[User]", f.getvalue()[:7])
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd('create State name="California"')
+            self.assertEqual(len(f.getvalue()), 37)
 
     def test_show(self):
         """Test show command inpout"""
@@ -174,6 +178,9 @@ class TestConsole(unittest.TestCase):
             self.assertEqual(
                 "** class doesn't exist **\n", f.getvalue())
         with patch('sys.stdout', new=StringIO()) as f:
+            if os.path.exists('file.json'):
+                print('file exists. deleting it')
+                os.remove('file.json')
             self.consol.onecmd("State.all()")
             self.assertEqual("[]\n", f.getvalue())
 
@@ -184,6 +191,8 @@ class TestConsole(unittest.TestCase):
             self.assertEqual(
                 "** class doesn't exist **\n", f.getvalue())
         with patch('sys.stdout', new=StringIO()) as f:
+            if os.path.exists('file.json'):
+                os.remove('file.json')
             self.consol.onecmd("State.count()")
             self.assertEqual("0\n", f.getvalue())
 
@@ -231,6 +240,7 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("User.update(" + my_id + ", name)")
             self.assertEqual(
                 "** value missing **\n", f.getvalue())
+
 
 if __name__ == "__main__":
     unittest.main()
