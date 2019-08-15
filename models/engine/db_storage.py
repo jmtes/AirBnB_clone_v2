@@ -6,7 +6,8 @@ from models.state import State
 from models.city import City
 from models.user import User
 from sqlalchemy import create_engine
-from models.places import Places
+from models.place import Place
+from models.review import Review
 import os
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
@@ -32,6 +33,7 @@ class DBStorage:
             query += self.__session.query(City).all()
             query += self.__session.query(User).all()
             query += self.__session.query(Place).all()
+            query += self.__session.query(Review).all()
             for i in query:
                 key = i.__class__.__name__ + "." + i.id
                 newdict[key] = i
