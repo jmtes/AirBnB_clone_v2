@@ -3,6 +3,7 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey, Integer, Float
 import os
+from models.review import Review
 from sqlalchemy.orm import relationship
 
 
