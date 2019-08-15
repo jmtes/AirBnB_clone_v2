@@ -6,7 +6,7 @@ import os
 from sqlalchemy import Table
 from models.review import Review
 from sqlalchemy.orm import relationship
-from models.amenity import Amenities
+import models.amenity
 
 
 class Place(BaseModel, Base):
