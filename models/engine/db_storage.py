@@ -13,7 +13,9 @@ import os
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
 
+
 class DBStorage:
+
     """
     A DBStorage class
     """
@@ -21,7 +23,12 @@ class DBStorage:
     __session = None
 
     def __init__(self):
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(os.environ['HBNB_MYSQL_USER'], os.environ['HBNB_MYSQL_PWD'], os.environ['HBNB_MYSQL_HOST'], os.environ['HBNB_MYSQL_DB'], pool_pre_ping=True))
+        eng = 'mysql+mysqldb://{}:{}@{}/{}'
+        self.__engine = create_engine(eng.format(os.environ['HBNB_MYSQL_USER'],
+                                      os.environ['HBNB_MYSQL_PWD'],
+                                      os.environ['HBNB_MYSQL_HOST'],
+                                      os.environ['HBNB_MYSQL_DB'],
+                                      pool_pre_ping=True))
         if os.environ['HBNB_ENV'] == 'test':
             Base.metadata.drop_all(self.__engine)
 
@@ -39,7 +46,7 @@ class DBStorage:
             for i in query:
                 key = i.__class__.__name__ + "." + i.id
                 newdict[key] = i
-            #print(newdict[key])
+            # print(newdict[key])
         else:
             for i in self.__session.query(cls).all():
                 key = i.__class__.__name__ + "." + i.id
@@ -51,13 +58,13 @@ class DBStorage:
         """
         self.__session.add(obj)
         self.__session.commit()
-        #self.save()
+        # self.save()
 
     def save(self):
         """
         commits all changes of the current database session
         """
-        #self.__session.flush()
+        # self.__session.flush()
         self.__session.commit()
 
     def delete(self, obj=None):
@@ -65,7 +72,8 @@ class DBStorage:
         """
         if obj:
             obj_id = obj.id
-            obj_result = self.__session.query(type(obj).filer(type(obj).id==obj_id.delete()))
+            obj_result = self.__session.query(
+                type(obj).filer(type(obj).id == obj_id.delete()))
         #    self.__session.commit()
 
     def reload(self):
@@ -75,6 +83,3 @@ class DBStorage:
         Session_s = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(Session_s)
         self.__session = Session()
-
-
-
