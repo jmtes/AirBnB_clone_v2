@@ -4,6 +4,7 @@
 from models.base_model import BaseModel, Base
 from models.state import State
 from models.city import City
+from models.user import User
 from sqlalchemy import create_engine
 import os
 from sqlalchemy.orm import sessionmaker
@@ -28,6 +29,7 @@ class DBStorage:
         if not cls:
             query = self.__session.query(State).all()
             query += self.__session.query(City).all()
+            query += self.__session.query(User).all()
             for i in query:
                 key = i.__class__.__name__ + "." + i.id
                 newdict[key] = i
