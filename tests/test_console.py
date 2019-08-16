@@ -135,6 +135,8 @@ class TestConsole(unittest.TestCase):
             self.assertEqual(
                 "** no instance found **\n", f.getvalue())
 
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                     'Skip if using database')
     def test_all(self):
         """Test all command inpout"""
         with patch('sys.stdout', new=StringIO()) as f:
@@ -175,7 +177,7 @@ class TestConsole(unittest.TestCase):
             self.assertEqual(
                 "** value missing **\n", f.getvalue())
 
-    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db',
                      'Skip if using database')
     def test_z_all(self):
         """Test alternate all command inpout"""
@@ -190,7 +192,7 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("State.all()")
             self.assertEqual("[]\n", f.getvalue())
 
-    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') != 'db',
                      'Skip if using database')
     def test_z_count(self):
         """Test count command inpout"""
