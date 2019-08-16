@@ -4,12 +4,18 @@
 from models.base_model import BaseModel, Base
 from models.state import State
 from models.city import City
+from models.user import User
 from sqlalchemy import create_engine
+from models.place import Place
+from models.review import Review
+from models.amenity import Amenity
 import os
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
 
+
 class DBStorage:
+
     """
     A DBStorage class
     """
@@ -17,8 +23,13 @@ class DBStorage:
     __session = None
 
     def __init__(self):
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(os.environ['HBNB_MYSQL_USER'], os.environ['HBNB_MYSQL_PWD'], os.environ['HBNB_MYSQL_HOST'], os.environ['HBNB_MYSQL_DB'], pool_pre_ping=True))
-        if os.environ == 'HBNB_ENV':
+        eng = 'mysql+mysqldb://{}:{}@{}/{}'
+        self.__engine = create_engine(eng.format(os.environ['HBNB_MYSQL_USER'],
+                                      os.environ['HBNB_MYSQL_PWD'],
+                                      os.environ['HBNB_MYSQL_HOST'],
+                                      os.environ['HBNB_MYSQL_DB'],
+                                      pool_pre_ping=True))
+        if os.environ['HBNB_ENV'] == 'test':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
@@ -26,27 +37,34 @@ class DBStorage:
         """
         newdict = {}
         if not cls:
-            for i in session.query(State, City).all():
+            query = self.__session.query(State).all()
+            query += self.__session.query(City).all()
+            query += self.__session.query(User).all()
+            query += self.__session.query(Place).all()
+            query += self.__session.query(Review).all()
+            query += self.__session.query(Amenity).all()
+            for i in query:
                 key = i.__class__.__name__ + "." + i.id
                 newdict[key] = i
-                return (newdict)
+            # print(newdict[key])
         else:
-            for i in session.query(cls).all():
+            for i in self.__session.query(cls).all():
                 key = i.__class__.__name__ + "." + i.id
                 newdict[key] = i
-                return (newdict)
+        return (newdict)
 
     def new(self, obj):
         """adds the object to the current database session
         """
         self.__session.add(obj)
-        #self.save()
+        self.__session.commit()
+        # self.save()
 
     def save(self):
         """
         commits all changes of the current database session
         """
-        #self.__session.flush()
+        # self.__session.flush()
         self.__session.commit()
 
     def delete(self, obj=None):
@@ -54,7 +72,8 @@ class DBStorage:
         """
         if obj:
             obj_id = obj.id
-            obj_result = session.query(type(obj).filer(type(obj).id==obj_id.delete()))
+            obj_result = self.__session.query(
+                type(obj).filter(type(obj).id == obj_id.delete()))
         #    self.__session.commit()
 
     def reload(self):
@@ -64,6 +83,3 @@ class DBStorage:
         Session_s = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(Session_s)
         self.__session = Session()
-
-
-

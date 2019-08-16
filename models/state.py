@@ -7,6 +7,7 @@ import os
 
 
 class State(BaseModel, Base):
+
     """This is the class for State
     Attributes:
         name: input name
@@ -14,14 +15,16 @@ class State(BaseModel, Base):
     __tablename__ = 'states'
     name = Column(String(128), nullable=False)
     # cities = relationship("City", cascade="delete")
-    cities = relationship('City', backref='state')
-
-    @property
-    def cities(self):
-        """Returns cities obj
-        """
-        newlist = []
-        for city in self.cities:
-            if city.state_id == self.id:
-                newlist.append(city)
-        return (newlist)
+    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+        cities = relationship(
+            'City', backref='state', cascade='all, delete-orphan')
+    else:
+        @property
+        def cities(self):
+            """Returns cities obj
+            """
+            newlist = []
+            for city in models.storage.all(City):
+                if city.state_id == self.id:
+                    newlist.append(city)
+            return (newlist)

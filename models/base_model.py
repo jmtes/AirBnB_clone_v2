@@ -8,7 +8,9 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
+
 class BaseModel:
+
     """This class will defines all common attributes/methods
     for other classes
     """
@@ -33,6 +35,8 @@ class BaseModel:
                     value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
                 if key != "__class__":
                     setattr(self, key, value)
+            if 'id' not in kwargs:
+                self.id = str(uuid.uuid4())
         else:
             self.id = str(uuid.uuid4())
             self.created_at = self.updated_at = datetime.now()
@@ -74,5 +78,3 @@ class BaseModel:
         """Delete the current instance from the storage models.storage
         """
         models.storage.delete(self)
-
-
