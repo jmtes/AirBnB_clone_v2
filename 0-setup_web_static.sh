@@ -10,5 +10,6 @@ mkdir -p /data/web_static/releases/test/
 echo "pool's closed" > /data/web_static/releases/test/index.html
 ln -sf /data/web_static/releases/test/ /data/web_static/current
 chown -R ubuntu:ubuntu /data/
+# shellcheck disable=SC2016
 sed -i '/listen \[::\]:80 default_server ipv6only=on;/aadd_header X-Served-By $hostname;\nlocation /hbnb_static {\nalias /data/web_static/current/;\n}\nlocation /redirect_me {\nrewrite ^ https://www.youtube.com/watch?v=dJMVtwbriK0 permanent;\n}\n\nerror_page 404 /custom_404.html;\nlocation = /custom_404.html {\ninternal;\n}' /etc/nginx/sites-available/default
 service nginx restart
