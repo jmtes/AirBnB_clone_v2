@@ -19,7 +19,7 @@ def do_pack():
         if not os.path.exists('versions/'):
             os.makedirs('versions/')
         local(cmd + dest + src)
-        return dest
+        return dest[:-1]
     except Exception:
         return None
 
