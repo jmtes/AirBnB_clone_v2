@@ -8,11 +8,13 @@ app.url_map.strict_slashes = False
 
 @app.route('/')
 def home():
+    ''' Return home page data. '''
     return "Hello HBNB!"
 
 
 @app.route('/hbnb')
 def hbnb():
+    ''' Return hbnb page data. '''
     return "HBNB"
 
 

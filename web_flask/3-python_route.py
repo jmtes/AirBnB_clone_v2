@@ -8,16 +8,23 @@ app.url_map.strict_slashes = False
 
 @app.route('/')
 def home():
+    ''' Return home page data. '''
     return "Hello HBNB!"
 
 
 @app.route('/hbnb')
 def hbnb():
+    ''' Return hbnb page data. '''
     return "HBNB"
 
 
 @app.route('/c/<text>')
 def c(text):
+    ''' Return c page data.
+
+        Args:
+            text - Text to print.
+    '''
     text = text.replace('_', ' ')
     return "C " + text
 
@@ -25,6 +32,11 @@ def c(text):
 @app.route('/python')
 @app.route('/python/<text>')
 def python(text='is cool'):
+    ''' Return python page data.
+
+        Args:
+            text - Text to print.
+    '''
     text = text.replace('_', ' ')
     return "Python " + text
 
