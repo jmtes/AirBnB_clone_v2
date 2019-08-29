@@ -73,3 +73,7 @@ class FileStorage:
             if k in self.__objects:
                 del self.__objects[k]
             self.save()
+
+    def close(self):
+        ''' Call reload method. '''
+        self.reload()
