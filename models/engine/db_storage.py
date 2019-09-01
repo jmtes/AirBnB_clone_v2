@@ -87,3 +87,19 @@ class DBStorage:
     def close(self):
         '''Close SQL session. '''
         self.__session.close()
+
+    def get_obj(self, obj_cls=None, obj_id=None):
+        ''' Get object by id.
+
+            Args:
+                obj_cls - Class of object.
+                obj_id - Id of object.
+
+            Return:
+                - Object if found, None otherwise.
+        '''
+        if obj_cls and obj_id:
+            objs = self.all(obj_cls)
+            for obj in objs.values():
+                if obj.id == obj_id:
+                    return obj
