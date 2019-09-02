@@ -78,8 +78,6 @@ class FileStorage:
         ''' Call reload method. '''
         self.reload()
 
-
-"""
     def get_obj(self, obj_cls=None, obj_id=None):
         ''' Get object by id.
 
@@ -94,4 +92,3 @@ class FileStorage:
             for obj in objs.values():
                 if obj.id == obj_id:
                     return obj
-"""
