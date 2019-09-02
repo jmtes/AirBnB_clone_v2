@@ -88,6 +88,8 @@ class DBStorage:
         '''Close SQL session. '''
         self.__session.close()
 
+
+"""
     def get_obj(self, obj_cls=None, obj_id=None):
         ''' Get object by id.
 
@@ -103,3 +105,4 @@ class DBStorage:
             for obj in objs.values():
                 if obj.id == obj_id:
                     return obj
+"""
