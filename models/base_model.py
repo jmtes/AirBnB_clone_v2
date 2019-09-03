@@ -50,8 +50,10 @@ class BaseModel:
         Return:
             returns a string of class name, id, and dictionary
         """
+        d = self.__dict__.copy()
+        del d['_sa_instance_state']
         return "[{}] ({}) {}".format(
-            type(self).__name__, self.id, self.__dict__)
+            type(self).__name__, self.id, d)
 
     def __repr__(self):
         """return a string representaion
